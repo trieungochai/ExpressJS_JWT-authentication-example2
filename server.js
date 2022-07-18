@@ -1,7 +1,8 @@
+require("dotenv").config();
 const express = require("express");
 const app = express();
 const JWT = require("jsonwebtoken");
-require("dotenv").config();
+const verifyToken = require("./middleware/auth");
 
 const PORT = process.env.PORT || 3000;
 
@@ -50,7 +51,7 @@ app.post("/login", (req, res) => {
   return res.status(200).json({ accessToken });
 });
 
-app.get("/albums", (req, res) => {
+app.get("/albums", verifyToken, (req, res) => {
   res.status(200).json({
     status: "Succeeded",
     data: albums,
