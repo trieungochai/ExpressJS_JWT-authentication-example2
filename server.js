@@ -1,5 +1,7 @@
 const express = require("express");
 const app = express();
+const JWT = require("jsonwebtoken");
+require("dotenv").config();
 
 const PORT = process.env.PORT || 3000;
 
@@ -24,7 +26,30 @@ const albums = [
   },
 ];
 
+const users = [
+  {
+    id: 1,
+    name: "Kai",
+  },
+  {
+    id: 2,
+    name: "Samu",
+  },
+];
+
 // app
+app.post("/login", (req, res) => {
+  const { name } = req.body;
+  const user = users.find((user) => user.name === name);
+  if (!user) return res.sendStatus(401);
+
+  const accessToken = JWT.sign(user, process.env.ACCESS_TOKEN_SECRET, {
+    expiresIn: "15s",
+  });
+
+  return res.status(200).json({ accessToken });
+});
+
 app.get("/albums", (req, res) => {
   res.status(200).json({
     status: "Succeeded",
