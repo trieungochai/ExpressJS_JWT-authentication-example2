@@ -1,7 +1,6 @@
 require("dotenv").config();
 const express = require("express");
 const app = express();
-const JWT = require("jsonwebtoken");
 const verifyToken = require("./middleware/auth");
 
 const PORT = process.env.PORT || 3000;
@@ -27,30 +26,7 @@ const albums = [
   },
 ];
 
-const users = [
-  {
-    id: 1,
-    name: "Kai",
-  },
-  {
-    id: 2,
-    name: "Samu",
-  },
-];
-
-// app
-app.post("/login", (req, res) => {
-  const { name } = req.body;
-  const user = users.find((user) => user.name === name);
-  if (!user) return res.sendStatus(401);
-
-  const accessToken = JWT.sign(user, process.env.ACCESS_TOKEN_SECRET, {
-    expiresIn: "15s",
-  });
-
-  return res.status(200).json({ accessToken });
-});
-
+// App
 app.get("/albums", verifyToken, (req, res) => {
   res.status(200).json({
     status: "Succeeded",
@@ -59,5 +35,5 @@ app.get("/albums", verifyToken, (req, res) => {
 });
 
 app.listen(PORT, () => {
-  console.log(`Server is started at P ort ${PORT}`);
+  console.log(`Server is started at Port ${PORT}`);
 });
